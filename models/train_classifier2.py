@@ -37,9 +37,9 @@ def load_data(database_filepath):
     df = pd.read_sql_table(table_name='incmsg', con=engine)
     #print(df.columns)
     
-    X = df.description.values
-    y= df.iloc[:, ~df.columns.isin(['u_incident.number', 'description'])]
-    category_label = y.columns
+    X = df.description
+    y= df.Priority
+    category_label = ['2','3','4','5']
     print(category_label)
     return X, y, category_label
 
@@ -71,14 +71,14 @@ def build_model():
         ])),
         
         #('clf', MultiOutputClassifier(RandomForestClassifier()))
-        ('clf', MultiOutputClassifier(LinearSVC()))
+        ('clf', LinearSVC())
     ])
 
     parameters = {
      #   'clf__estimator__n_estimators': [100],
      #   'clf__estimator__min_samples_split': [2]
-         # 'clf__estimator__loss': ['hinge', 'squared_hinge'],
-          'clf__estimator__max_iter':[1000]
+         #'clf__loss': ['hinge', 'squared_hinge']
+          'clf__max_iter':[1000,2000]
     }
     
     cv = GridSearchCV(pipeline, param_grid=parameters)
@@ -93,10 +93,10 @@ def evaluate_model(model, X_test, Y_test, category_names):
     '''
     y_pred = model.predict(X_test)
     #convert results to DF
-    Y_pred = pd.DataFrame(data=y_pred, 
-                          index=Y_test.index, 
-                          columns=category_names)
-    print(classification_report(Y_test, Y_pred, target_names=category_names))
+   # Y_pred = pd.DataFrame(data=y_pred, 
+   #                       index=Y_test.index, 
+    #                      columns=category_names)
+    print(classification_report(Y_test, y_pred, target_names=category_names))
 
 
 def save_model(model, model_filepath):
@@ -130,9 +130,9 @@ def main():
         #query = 'I have outdated information on my credit report'
         classification_labels = model.predict([query])[0]
         print (classification_labels)
-        classification_results = dict(zip(['priority_2', 'priority_3', 'priority_4', 'priority_5'], classification_labels))
+        #classification_results = dict(zip(['priority_2', 'priority_3', 'priority_4', 'priority_5'], classification_labels))
         
-        print (classification_results)
+        #print (classification_results)
 '''
     else:
         print('Please provide the filepath of the disaster messages database '\

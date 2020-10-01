@@ -16,8 +16,7 @@ def load_clean_data(messages_filepath):
     clean missing data
     '''
     # load data
-    df = pd.read_csv(messages_filepath, delimiter = ';',encoding = "ISO-8859-1")
-    #drop non needed field
+    df = pd.read_csv("2019oct-2020mar_inc.csv",delimiter = ';',encoding = "ISO-8859-1")
     df.drop(['cmdb_code', 'cmdb', 
        'location', 'u_incident.caller_id.location.u_country',
        'u_incident.caller_id.location.u_country.u_region',
@@ -26,14 +25,14 @@ def load_clean_data(messages_filepath):
     df['Priority'] = df['Priority'].map({1:2, 2:2, 3:3, 4:4, 5:5})
     # load categories for priority 
     
-    categories_df = pd.get_dummies(df['Priority'], prefix='priority')
-    df.drop(['Priority'], axis=1, inplace=True)
+    #categories_df = pd.get_dummies(df['Priority'], prefix='priority')
+    #df.drop(['Priority'], axis=1, inplace=True)
     #create final DF by from original DF and created priorities categories
-    df = pd.concat([df, categories_df], axis=1)
+    #df = pd.concat([df, categories_df], axis=1)
     # drop duplicates and NA just in case
     df.drop_duplicates(inplace=True)
     df.dropna(inplace=True)
-    df = df.sample(n=50000)    
+    df = df.sample(n=50000) 
     
     return df
 
