@@ -22,7 +22,10 @@ def load_clean_data(messages_filepath):
        'location', 'u_incident.caller_id.location.u_country',
        'u_incident.caller_id.location.u_country.u_region',
        'u_incident.caller_id.u_segment'], axis=1, inplace=True)
+    #convert priority 1 to priority 2 as priority 1 is only manualy set up
+    df['Priority'] = df['Priority'].map({1:2, 2:2, 3:3, 4:4, 5:5})
     # load categories for priority 
+    
     categories_df = pd.get_dummies(df['Priority'], prefix='priority')
     df.drop(['Priority'], axis=1, inplace=True)
     #create final DF by from original DF and created priorities categories
@@ -30,7 +33,7 @@ def load_clean_data(messages_filepath):
     # drop duplicates and NA just in case
     df.drop_duplicates(inplace=True)
     df.dropna(inplace=True)
-        
+    df = df.sample(n=50000)    
     
     return df
 

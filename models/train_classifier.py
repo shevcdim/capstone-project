@@ -73,8 +73,8 @@ def build_model():
     ])
 
     parameters = {
-        'clf__estimator__n_estimators': [50]
-       # 'clf__estimator__min_samples_split': [2, 4]
+        'clf__estimator__n_estimators': [100],
+        'clf__estimator__min_samples_split': [2]
     }
     
     cv = GridSearchCV(pipeline, param_grid=parameters)
@@ -106,7 +106,7 @@ def main():
   
         print('Loading data...\n    DATABASE: {}'.format(database_filepath))
         X, Y, category_names = load_data(database_filepath)
-        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
+        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.25)
             
         print('Building model...')
         model = build_model()
@@ -114,6 +114,7 @@ def main():
         print('Training model...')
         model.fit(X_train, Y_train)
         
+        display(model.get_params())
         print('Evaluating model...')
         evaluate_model(model, X_test, Y_test, category_names)
 
