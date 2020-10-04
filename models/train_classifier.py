@@ -37,22 +37,24 @@ def load_data(database_filepath):
     df = pd.read_sql_table(table_name='incmsg', con=engine)
     #print(df.columns)
     
-    X = df.description.values
-    y= df.iloc[:, ~df.columns.isin(['u_incident.number', 'description'])]
-    category_label = y.columns
+    X = df.description
+    y= df.Priority
+    category_label = ['2','3','4','5']
     print(category_label)
     return X, y, category_label
 
 
 def tokenize(text):
+    '''
+    use wonltk for tokenizing and lemmatizing
+    '''
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
 
     clean_tokens = []
     for tok in tokens:
         clean_tok = lemmatizer.lemmatize(tok).lower().strip()
-        clean_tokens.append(clean_tok)
-
+        clean_tokens.append(clean_tok)      
     return clean_tokens
 
 
@@ -60,29 +62,33 @@ def build_model():
     '''
     buid ml pipeline using featureunion for text vectorizing and RF
     leverage gridsearch for optimal parameters (for speed only left 1 parameter)
+    several classifiers were tried
 
     '''
     pipeline = Pipeline([
         ('features', FeatureUnion([
             ('text_pipeline', Pipeline([
                 ('vect', CountVectorizer(tokenizer=tokenize)),
+              #  ('vect', CountVectorizer(min_df = 5, #minimum numbers of documents a word must be present in to be kept
+              #         ngram_range= (1,2), #to indicate that we want to consider both unigrams and bigrams.
+              #         stop_words ='english')),
                 ('tfidf', TfidfTransformer())
             ]))
         ])),
         
         #('clf', MultiOutputClassifier(RandomForestClassifier()))
-        ('clf', MultiOutputClassifier(LinearSVC()))
+        #('clf', RandomForestClassifier())
+        ('clf', LinearSVC())
     ])
 
     parameters = {
-     #   'clf__estimator__n_estimators': [100],
+    #    'clf__n_estimators': [100]
      #   'clf__estimator__min_samples_split': [2]
-         # 'clf__estimator__loss': ['hinge', 'squared_hinge'],
-          'clf__estimator__max_iter':[1000]
+         #'clf__loss': ['hinge', 'squared_hinge']
+          'clf__max_iter':[1000]
     }
     
     cv = GridSearchCV(pipeline, param_grid=parameters)
-
     return cv
 
 
@@ -92,11 +98,8 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
     '''
     y_pred = model.predict(X_test)
-    #convert results to DF
-    Y_pred = pd.DataFrame(data=y_pred, 
-                          index=Y_test.index, 
-                          columns=category_names)
-    print(classification_report(Y_test, Y_pred, target_names=category_names))
+  
+    print(classification_report(Y_test, y_pred, target_names=category_names))
 
 
 def save_model(model, model_filepath):
@@ -104,13 +107,12 @@ def save_model(model, model_filepath):
 
 
 def main():
-    #if len(sys.argv) == 3:
         database_filepath = '../data/IncidentPriority.db' 
         model_filepath = 'classifier.pkl'
   
         print('Loading data...\n    DATABASE: {}'.format(database_filepath))
         X, Y, category_names = load_data(database_filepath)
-        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.25)
+        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
             
         print('Building model...')
         model = build_model()
@@ -118,7 +120,6 @@ def main():
         print('Training model...')
         model.fit(X_train, Y_train)
         
-        display(model.get_params())
         print('Evaluating model...')
         evaluate_model(model, X_test, Y_test, category_names)
 
@@ -126,20 +127,7 @@ def main():
         save_model(model, model_filepath)
         
         print('Trained model saved!')
-        query = 'cannot log into fido'
-        #query = 'I have outdated information on my credit report'
-        classification_labels = model.predict([query])[0]
-        print (classification_labels)
-        classification_results = dict(zip(['priority_2', 'priority_3', 'priority_4', 'priority_5'], classification_labels))
-        
-        print (classification_results)
-'''
-    else:
-        print('Please provide the filepath of the disaster messages database '\
-              'as the first argument and the filepath of the pickle file to '\
-              'save the model to as the second argument. \n\nExample: python '\
-              'train_classifier.py ../data/DisasterResponse.db classifier.pkl')
-'''     
+     
    
 if __name__ == '__main__':
     main()    
