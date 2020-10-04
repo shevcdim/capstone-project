@@ -3,36 +3,40 @@ Incident Prioritization advisor Project
 https://github.com/shevcdim/capstone-project
 
 Table of Contents
+About (Business problem)
 Instructions
 File Descriptions
 Licensing, Authors, and Acknowledgements
+About (Business problem)
+One of essential part for every reported incident is to be able to properly estimate priority of this Incident as it will drive further reaction and resolution time SLA from operational teams.
+For refference we have 5 priorities for Incidents:
+1 - Global Crisis resolution time 4 Hours
+2 - Major Incident resolution time 24 hours
+3 - Minor application or critical individual user problem - resolution time 72 hours
+4 - Non critical user problem - resolution time 5 business days
+5 - User request/how to - resolution time 10 business days
+We have H1 2020 Incidents data with initial incident description captured by analyst on front line and resulted priority of this incident.
+I created classifier to learn on Data dump of previous incident and levering NLTK tokenizer and lemmatizer + LinearSVM classifier to predict potential priority of new incident to assist analyst on front line when he or she assign the priority for new coming incidents
+I will continue to work on optimizing model accurace and F1 score and consider using CNN as well as data quality need to addressed with support team for quality incident description.
+
 Instructions:
-ETL The first part of data pipeline is the Extract, Transform, and Load process. To load the data into an SQLite database, I am using the pandas dataframe .to_sql() method, which you can use with an SQLAlchemy engine, cleaning code is also included in the final ETL script, process_data.py.
+Step 1. You need to unpack (7zip) raw incident data first normalized_incident.7z
+Step 2. You need to go to data folder and run python file process_data.py. This code will process the raw data from incident file and create SQL light DB with the saved data for further use
+Step 3. You need to go to folder models and run python file train_classifier.py. It will read the data from DB and build classifiation model , store it in file classifier.pkl for future use.
+Step 3.1 You might need to install joblib (if not installed already) by pip install joblib
+Step 4. You need to go to app folder and run python run.py followed by "description of incident"
 
-Machine Learning Pipeline For the machine learning portion, I split the data into a training set and a test set. Then, I created a machine learning pipeline that uses NLTK, as well as scikit-learn's Pipeline and GridSearchCV to output a final model that uses the message column to predict classifications for 36 categories (multi-output classification) using Random Forest classifier. Finally, I exported model to a pickle file. train_classifier.py
+Example: python run.py "Navision is not working for RCA factory"
 
-Example: python process_data.py disaster_messages.csv disaster_categories.csv DisasterResponse.db
-
-python train_classifier.py ../data/DisasterResponse.db classifier.pkl
-
-Flask App is used to display results in a Flask web app.
-
-Follow this instruction to run the whole thing
-
-Run the following commands in the project's root directory to set up your database and model.
-
-To run ETL pipeline that cleans data and stores in database python data/process_data.py data/disaster_messages.csv data/disaster_categories.csv data/DisasterResponse.db
-To run ML pipeline that trains classifier and saves python models/train_classifier.py data/DisasterResponse.db models/classifier.pkl
-Run the following command in the app's directory to run your web app. python run.py
-
-Go to http://0.0.0.0:3001/
 
 File Descriptions:
-app | - template | |- master.html # main page of web app | |- go.html # classification result page of web app |- run.py # Flask file that runs app
+data\process_data.py - read the raw data from normalized_incident.csv file, process it and put data frame into IncidentPriority.db
+data\IncidentPriority.db - sql light DB to store incidents data frame 
+data\normalized_incident.csv - raw data of incidents
+models\train_classifier.py - process text description using NLTK
+models\classifier.pkl
+app\run.py
 
-data |- disaster_categories.csv # data to process |- disaster_messages.csv # data to process |- process_data.py |- InsertDatabaseName.db # database to save clean data to
-
-models |- train_classifier.py |- classifier.pkl # saved model
 
 README.md
 
