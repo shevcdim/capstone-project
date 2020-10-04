@@ -25,20 +25,16 @@ Step 2. You need to go to data folder and run python file process_data.py. This 
 Step 3. You need to go to folder models and run python file train_classifier.py. It will read the data from DB and build classifiation model , store it in file classifier.pkl for future use.
 Step 3.1 You might need to install joblib (if not installed already) by pip install joblib
 Step 4. You need to go to app folder and run python run.py followed by "description of incident"
-
-Example: python run.py "Navision is not working for RCA factory"
+  Example: python run.py "Navision is not working for RCA factory"
 
 
 File Descriptions:
 data\process_data.py - read the raw data from normalized_incident.csv file, process it and put data frame into IncidentPriority.db
 data\IncidentPriority.db - sql light DB to store incidents data frame 
 data\normalized_incident.csv - raw data of incidents
-models\train_classifier.py - process text description using NLTK
-models\classifier.pkl
-app\run.py
-
-
-README.md
+models\train_classifier.py - process text description of incident using NLTK tokenizer with LinearSVM classifier leveraging pipeline with featureunion
+models\classifier.pkl -linearSVM model save file
+app\run.py - utility tool to clasify input text with incident description for Incident prioritization.
 
 Licensing, Authors, Acknowledgements
-Dataset of messages and categories is provided and owned by Figure Eight
+Dataset used for this project is property of Marc Inc 
