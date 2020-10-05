@@ -75,20 +75,18 @@ def build_model():
                 ('tfidf', TfidfTransformer())
             ]))
         ])),
-        
-        #('clf', MultiOutputClassifier(RandomForestClassifier()))
-        #('clf', RandomForestClassifier())
+   
         ('clf', LinearSVC())
     ])
 
     parameters = {
-    #    'clf__n_estimators': [100]
-     #   'clf__estimator__min_samples_split': [2]
-         #'clf__loss': ['hinge', 'squared_hinge']
-          'clf__max_iter':[1000]
+          'clf__tol': [1e-5],
+          'clf__max_iter':[500],
+          'clf__dual':[False, True]
     }
     
     cv = GridSearchCV(pipeline, param_grid=parameters)
+    
     return cv
 
 
@@ -119,6 +117,9 @@ def main():
         
         print('Training model...')
         model.fit(X_train, Y_train)
+        
+        print("Best parameters set found on development set:")
+        print(model.best_params_)
         
         print('Evaluating model...')
         evaluate_model(model, X_test, Y_test, category_names)
