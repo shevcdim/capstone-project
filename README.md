@@ -73,11 +73,16 @@ https://github.com/shevcdim/capstone-project
 
 
 **Instructions:**
-    Step 1. In the folder called data You need to unpack (7zip) raw incident data file called normalized_incident.7z
-    Step 2. In the same folder run python file process_data.py. This code will process the raw data from incident file and create SQL light DB with the saved data for further use
-    Step 3. Go to folder called models and run python file train_classifier.py. It will read the data from DB and build classifiation model , store it in file classifier.pkl for future use.
-    Step 3.1 You might need to install joblib (if not installed already) by pip install joblib
-    Step 4. Go to folder called app and run python run.py followed by "description of incident" , this will return forecasted classigication of your incident based on description provided
+
+Step 1. In the folder called data You need to unpack (7zip) raw incident data file called normalized_incident.7z
+
+Step 2. In the same folder run python file process_data.py. This code will process the raw data from incident file and create SQL light DB with the saved data for further use
+
+Step 3. Go to folder called models and run python file train_classifier.py. It will read the data from DB and build classifiation model , store it in file classifier.pkl for future use.
+
+Step 3.1 You might need to install joblib (if not installed already) by pip install joblib
+
+Step 4. Go to folder called app and run python run.py followed by "description of incident" , this will return forecasted classigication of your incident based on description provided
       Example: python run.py "Navision is not working for RCA factory"
 
 
