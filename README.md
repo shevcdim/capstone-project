@@ -30,7 +30,8 @@ https://github.com/shevcdim/capstone-project
             nltk word_tokenize and WordNetLemmatizer to tokenize and lemmatize(convert to initial base form) text desciption
             sklearn CountVectorizer to convert text description of incidents into to a matrix of token counts leveraging NLTK tokenizeing
             sklearn TfidfTransformer Transform a token count matrix to a normalized tf-idf representation 
-            sklearn LinearSVC (Linear Support Vector Classification) was selected as multiclass classification algorithm, capable of handling large datasets.
+            sklearn LinearSVC (Linear Support Vector Classification) was selected as multiclass classification algorithm, 
+            it is capable of handling large datasets.
             
 *Hyperparameter if done on what parameters, what were the old and final parameters*
 
