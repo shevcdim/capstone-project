@@ -70,7 +70,7 @@ https://github.com/shevcdim/capstone-project
 
     accuracy                           0.71     38852
    macro avg       0.60      0.47      0.51     38852
-weighted avg       0.69      0.71      0.70     38852
+   weighted avg       0.69      0.71      0.70     38852
 
 
 **Instructions:**
