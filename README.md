@@ -96,7 +96,7 @@ app\run.py - utility tool to clasify input text with incident description for In
 
 **Conclusion (Summarizing the problem end to end)**
 The problem of forecasting Priority of new coming incident based on incident description can be solved with classification algorithms leveraging word tokenizing and vectorizing.
-I was able to achieve 71% accuracy only on the test data using LinearSVC algorithm and this was best so far comparing to RandomForest Classifier and simple CNN.
+I was able to achieve 71% accuracy only on the test data using LinearSVC algorithm and this was best so far comparing to RandomForest Classifier and non linear SVM.
 I believe that in order to improve results further to 80+ I need to focus on data quality and ensure that historical incidents descriptions have clear and structured summary of what happened, where happend, with level of impact and other symptoms so that model can generalize data well
 
 **Licensing, Authors, Acknowledgements**
